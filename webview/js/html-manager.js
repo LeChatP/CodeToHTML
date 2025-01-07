@@ -6,6 +6,25 @@ class HtmlManager {
         this.styleText = codeDiv.style.cssText.replace(/"/g, "'");
         this.styleText = this.styleText.replace(/white-space:.*?;/, '');
         this.styleText += 'margin: auto; width: fit-content; overflow: auto;';
+        
+        // replace br tag with div span
+        const brs = codeDiv.querySelectorAll('br');
+        for (const br of brs) {
+            const span = document.createElement('span');
+            span.textContent = ' ';
+            br.replaceWith(span);
+        }
+        // add line numbers for each div element
+        const tags = codeDiv.querySelectorAll('div');
+        const sizeSpace = `${tags.length+1}`.length;
+        for (let i = 0; i < tags.length; i++) {
+            const space = `${i+1}`.length;
+            const tag = tags[i];
+            const lineNumber = document.createElement('span');
+            lineNumber.textContent =  `${i + 1}.${" ".repeat(sizeSpace - space)}|`;
+            lineNumber.style = 'position: absolute; left: -40px; color: #555; font-size: 12px;';
+            tag.prepend(lineNumber);
+        }
         this.defaultCodeDiv = codeDiv.cloneNode(true);
     }
 
